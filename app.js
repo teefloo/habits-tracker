@@ -1,5 +1,3 @@
-const STORAGE_KEY = "habits-tracker.v1";
-
 const els = {
   gridScroll: document.getElementById("grid-scroll"),
   dayHeaders: document.getElementById("day-headers"),
@@ -12,6 +10,8 @@ const els = {
   emptyAdd: document.getElementById("empty-add"),
   addForm: document.getElementById("add-form"),
   newHabit: document.getElementById("new-habit"),
+  syncError: document.getElementById("sync-error"),
+  syncRetry: document.getElementById("sync-retry"),
 };
 
 const state = {
@@ -66,36 +66,6 @@ function isSameDay(a, b) {
 
 function keyFor(habitId, date) {
   return `${dateKey(date)}|${habitId}`;
-}
-
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    if (Array.isArray(data.habits)) state.habits = data.habits;
-    if (data.completions && typeof data.completions === "object") {
-      state.completions = data.completions;
-    }
-  } catch (err) {
-    console.error("Impossible de charger les données :", err);
-  }
-}
-
-function save() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      habits: state.habits,
-      completions: state.completions,
-    })
-  );
-}
-
-function newId() {
-  return typeof crypto !== "undefined" && crypto.randomUUID
-    ? crypto.randomUUID()
-    : `h-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
 function formatRange(start) {
@@ -242,36 +212,62 @@ function render() {
   els.addForm.hidden = !hasHabits;
 }
 
-function updateCell(habitId, date) {
-  const done = !!state.completions[keyFor(habitId, date)];
-  const btn = els.rows.querySelector(
-    `.toggle[data-habit="${habitId}"][data-date="${dateKey(date)}"]`
-  );
-  if (!btn) return;
-  btn.setAttribute("aria-pressed", String(done));
-  const habit = state.habits.find((h) => h.id === habitId);
-  btn.setAttribute(
-    "aria-label",
-    `${habit.name}, ${fmtFull.format(date)} — ${done ? "réalisée" : "non réalisée"}`
-  );
-
-  const countEl = els.rows.querySelector(
-    `.row[data-habit="${habitId}"] .row-count`
-  );
-  if (countEl) countEl.textContent = `${countDone(habitId)}/7`;
+function showSyncError() {
+  els.syncError.hidden = false;
 }
 
-function handleToggle(btn) {
-  const habitId = btn.dataset.habit;
-  const date = new Date(btn.dataset.date + "T12:00:00");
-  const k = keyFor(habitId, date);
-  if (state.completions[k]) {
-    delete state.completions[k];
-  } else {
-    state.completions[k] = true;
+function hideSyncError() {
+  els.syncError.hidden = true;
+}
+
+async function apiCall(path, opts) {
+  try {
+    const res = await fetch(path, { credentials: "same-origin", ...opts });
+    if (res.status === 401) {
+      location.reload();
+      return null;
+    }
+    return res;
+  } catch (err) {
+    return null;
   }
-  save();
-  updateCell(habitId, date);
+}
+
+async function fetchState() {
+  const res = await apiCall("/api/state");
+  if (!res || !res.ok) {
+    showSyncError();
+    return false;
+  }
+  const data = await res.json();
+  state.habits = data.habits || [];
+  state.completions = data.completions || {};
+  hideSyncError();
+  render();
+  return true;
+}
+
+async function sendMutation(path, method) {
+  const res = await apiCall(path, {
+    method,
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res) {
+    showSyncError();
+    return false;
+  }
+  await fetchState();
+  return true;
+}
+
+async function handleToggle(btn) {
+  const habitId = btn.dataset.habit;
+  const date = btn.dataset.date;
+  const done = btn.getAttribute("aria-pressed") === "true";
+  btn.disabled = true;
+  const method = done ? "DELETE" : "PUT";
+  const sent = await sendMutation(`/api/completions/${habitId}/${date}`, method);
+  if (!sent) btn.disabled = false;
 }
 
 function confirmDelete(habitId, habitName, nameCell) {
@@ -302,14 +298,10 @@ function confirmDelete(habitId, habitName, nameCell) {
   };
   setTimeout(revert, 4000);
 
-  confirmBtn.addEventListener("click", () => {
-    nameCell.dataset.resolved = "1";
-    state.habits = state.habits.filter((h) => h.id !== habitId);
-    Object.keys(state.completions).forEach((k) => {
-      if (k.endsWith(`|${habitId}`)) delete state.completions[k];
-    });
-    save();
-    render();
+  confirmBtn.addEventListener("click", async () => {
+    confirmBtn.disabled = true;
+    const sent = await sendMutation(`/api/habits/${habitId}`, { method: "DELETE" });
+    if (!sent) revert();
   });
   confirmBtn.addEventListener("keydown", (e) => {
     if (e.key === "Escape") revert();
@@ -324,12 +316,24 @@ function handleDelete(btn) {
   confirmDelete(habitId, habit.name, btn.closest(".name"));
 }
 
-function addHabit(name) {
+async function addHabit(name) {
   const trimmed = name.trim();
   if (!trimmed) return;
-  state.habits.push({ id: newId(), name: trimmed.slice(0, 60) });
-  save();
-  render();
+  const submitBtn = els.addForm.querySelector("button[type=submit]");
+  submitBtn.disabled = true;
+  const res = await apiCall("/api/habits", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name: trimmed.slice(0, 60) }),
+  });
+  submitBtn.disabled = false;
+  if (!res) {
+    showSyncError();
+    return;
+  }
+  await fetchState();
+  els.newHabit.value = "";
+  els.newHabit.focus();
 }
 
 els.rows.addEventListener("click", (e) => {
@@ -360,8 +364,6 @@ els.todayBtn.addEventListener("click", () => {
 els.addForm.addEventListener("submit", (e) => {
   e.preventDefault();
   addHabit(els.newHabit.value);
-  els.newHabit.value = "";
-  els.newHabit.focus();
 });
 
 els.emptyAdd.addEventListener("click", () => {
@@ -369,5 +371,8 @@ els.emptyAdd.addEventListener("click", () => {
   els.newHabit.focus();
 });
 
-load();
-render();
+els.syncRetry.addEventListener("click", () => {
+  fetchState();
+});
+
+window.app = { loadState: fetchState };

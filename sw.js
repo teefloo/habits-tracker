@@ -1,9 +1,10 @@
-const CACHE_NAME = 'habits-tracker-v1';
+const CACHE_NAME = 'habits-tracker-v2';
 const SHELL = [
   '/',
   '/index.html',
   '/styles.css',
   '/app.js',
+  '/auth.js',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'
