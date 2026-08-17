@@ -1,5 +1,5 @@
 const { getPool, ensureSchema } = require("./_lib/db");
-const { handle, ok, error, readBody } = require("./_lib/http");
+const { handle, json, error, readBody } = require("./_lib/http");
 const { requireUser } = require("./_lib/auth");
 
 module.exports = (req, res) =>
@@ -20,5 +20,5 @@ module.exports = (req, res) =>
       "INSERT INTO habits (user_id, name) VALUES ($1, $2) RETURNING id, name",
       [user.id, name]
     );
-    ok(res, { habit: rows[0] });
+    json(res, 201, { habit: rows[0] });
   });

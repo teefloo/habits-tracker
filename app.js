@@ -222,7 +222,11 @@ function hideSyncError() {
 
 async function apiCall(path, opts) {
   try {
-    const res = await fetch(path, { credentials: "same-origin", ...opts });
+    const res = await fetch(path, {
+      credentials: "same-origin",
+      cache: "no-store",
+      ...opts,
+    });
     if (res.status === 401) {
       location.reload();
       return null;
@@ -300,7 +304,7 @@ function confirmDelete(habitId, habitName, nameCell) {
 
   confirmBtn.addEventListener("click", async () => {
     confirmBtn.disabled = true;
-    const sent = await sendMutation(`/api/habits/${habitId}`, { method: "DELETE" });
+    const sent = await sendMutation(`/api/habits/${habitId}`, "DELETE");
     if (!sent) revert();
   });
   confirmBtn.addEventListener("keydown", (e) => {

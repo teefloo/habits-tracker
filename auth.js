@@ -19,6 +19,7 @@ const authEls = {
 async function api(path, opts = {}) {
   const res = await fetch(path, {
     credentials: "same-origin",
+    cache: "no-store",
     headers: { "Content-Type": "application/json" },
     ...opts,
   });

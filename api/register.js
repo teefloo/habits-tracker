@@ -1,5 +1,5 @@
 const { getPool, ensureSchema } = require("./_lib/db");
-const { handle, ok, error, readBody } = require("./_lib/http");
+const { handle, json, error, readBody } = require("./_lib/http");
 const { hashPassword, createSession, setSessionCookie, clientIp, allowRequest } =
   require("./_lib/auth");
 
@@ -38,5 +38,5 @@ module.exports = (req, res) =>
     const user = rows[0];
     const session = await createSession(db, user.id);
     setSessionCookie(res, session.token, session.expires);
-    ok(res, { user: { id: user.id, email: user.email } });
+    json(res, 201, { user: { id: user.id, email: user.email } });
   });
