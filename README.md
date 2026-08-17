@@ -2,7 +2,7 @@
 
 Suivi d'habitudes personnel, minimal et local : une grille hebdomadaire (habitudes × 7 jours) où chaque case se coche d'un simple clic.
 
-> Démo : [habitudes.vercel.app](https://habitudes.vercel.app)
+> Démo : [habitudes-tracker.vercel.app](https://habitudes-tracker.vercel.app)
 
 ## Pourquoi
 
