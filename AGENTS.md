@@ -5,7 +5,7 @@
 Personal, French-language habit-tracking dashboard: a weekly grid (habits × 7 days) where each cell is toggled done/undone with one click. No accounts, no backend — data lives in `localStorage` and never leaves the browser.
 
 - **Stack**: vanilla HTML/CSS/JS. Zero dependencies, no build step, no package manager, no framework.
-- **Files**: `index.html` (shell), `styles.css` (all styling), `app.js` (all logic). Everything is in these three files.
+- **Files**: `index.html` (shell), `styles.css` (all styling), `app.js` (all logic), plus PWA assets: `manifest.json`, `sw.js` (offline cache), `icon-512.png` / `icon-192.png` / `apple-touch-icon.png` (icons, brand: green circle + white check).
 - **UI language**: French (`lang="fr"`), all visible strings in French. Do not add English UI text.
 - **Philosophy**: minimal, sober, functional. Do not add features, libraries, or decorative elements that weren't asked for.
 
@@ -73,3 +73,4 @@ No build or deploy pipeline. The project is served as-is by any static file serv
 - Delete is two-step (inline "Supprimer ?" confirm) to prevent accidental loss — keep that safeguard.
 - The add form must reset and re-focus after submit; the new habit must appear in the current week's grid immediately.
 - `week-start` column highlighting (today) must use `aria-current="date"` only for the actual today column.
+- The service worker (`sw.js`) is cache-first: bump `CACHE_NAME` (e.g. `habits-tracker-v2`) whenever `app.js`, `styles.css`, or `index.html` change, otherwise installed users get stale assets.

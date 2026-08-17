@@ -67,11 +67,17 @@ body {
   max-width: 980px;
   margin: 0 auto;
   padding: 40px 20px 32px;
+  padding-top: calc(40px + env(safe-area-inset-top));
+  padding-bottom: calc(32px + env(safe-area-inset-bottom));
 }
 
 @media (max-width: 640px) {
   .shell {
     padding: 24px 12px 24px;
+    padding-top: calc(24px + env(safe-area-inset-top));
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    padding-left: calc(12px + env(safe-area-inset-left));
+    padding-right: calc(12px + env(safe-area-inset-right));
   }
 }
 

@@ -2,7 +2,7 @@
 
 Suivi d'habitudes personnel, minimal et local : une grille hebdomadaire (habitudes × 7 jours) où chaque case se coche d'un simple clic.
 
-> Démo : [habits-tracker-722rubzab-teeflo.vercel.app](https://habits-tracker-722rubzab-teeflo.vercel.app)
+> Démo : [habitudes.vercel.app](https://habitudes.vercel.app)
 
 ## Pourquoi
 
@@ -16,6 +16,7 @@ Un tracker d'habitudes sans compte, sans inscription, sans serveur. Les données
 - **Navigation par semaine** (‹ › et retour à « Aujourd'hui »)
 - **Thème clair / sombre** automatique, respect de `prefers-reduced-motion`
 - **Responsive** : grille pleine largeur sur desktop, colonne des habitudes épinglée et défilement horizontal sur mobile
+- **PWA installable** : fonctionne hors ligne, icône d'accueil — « Ajouter à l'écran d'accueil » sur iPhone (Safari → Partager → Sur l'écran d'accueil)
 - **Accessible** : contrastes AA, focus visibles, attributs ARIA
 
 ## Démarrage rapide
@@ -44,9 +45,14 @@ vercel --prod
 ## Structure
 
 ```
-index.html    Coquille de la page (en-tête, grille, formulaire)
-styles.css    Tout le style : tokens, thèmes clair/sombre, grille
-app.js        Toute la logique : état, localStorage, rendu, interactions
+index.html            Coquille de la page (en-tête, grille, formulaire)
+styles.css            Tout le style : tokens, thèmes clair/sombre, grille
+app.js                Toute la logique : état, localStorage, rendu, interactions
+manifest.json         Métadonnées PWA (nom, icônes, standalone)
+sw.js                 Service worker : cache offline de l'application
+icon-512.png          Icône PWA 512 px
+icon-192.png          Icône PWA 192 px
+apple-touch-icon.png  Icône iOS (écran d'accueil)
 ```
 
 ## Confidentialité
