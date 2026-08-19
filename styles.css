@@ -533,6 +533,22 @@ body {
   padding: 30px 28px 32px;
 }
 
+.boot-card {
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 34px 28px;
+  text-align: center;
+}
+
+.boot-title {
+  font-size: 22px;
+}
+
+.boot-text {
+  margin: 10px 0 0;
+  color: var(--text-muted);
+}
+
 .auth-title {
   margin: 0 0 22px;
   font-size: 22px;

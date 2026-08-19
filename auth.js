@@ -1,4 +1,5 @@
 const authEls = {
+  bootView: document.getElementById("boot-view"),
   authView: document.getElementById("auth-view"),
   appView: document.getElementById("app-view"),
   blockedView: document.getElementById("blocked-view"),
@@ -33,18 +34,21 @@ async function api(path, opts = {}) {
 }
 
 function showAuth() {
+  authEls.bootView.hidden = true;
   authEls.authView.hidden = false;
   authEls.appView.hidden = true;
   authEls.blockedView.hidden = true;
 }
 
 function showApp() {
+  authEls.bootView.hidden = true;
   authEls.authView.hidden = true;
   authEls.appView.hidden = false;
   authEls.blockedView.hidden = true;
 }
 
 function showBlocked(title, text) {
+  authEls.bootView.hidden = true;
   authEls.authView.hidden = true;
   authEls.appView.hidden = true;
   authEls.blockedView.hidden = false;
@@ -62,8 +66,12 @@ function clearError(el) {
 }
 
 async function enterApp() {
-  showApp();
+  authEls.bootView.hidden = false;
+  authEls.authView.hidden = true;
+  authEls.appView.hidden = true;
+  authEls.blockedView.hidden = true;
   await window.app.loadState();
+  showApp();
 }
 
 async function submitLogin(e) {
@@ -141,6 +149,10 @@ async function logout() {
 }
 
 async function init() {
+  authEls.bootView.hidden = false;
+  authEls.authView.hidden = true;
+  authEls.appView.hidden = true;
+  authEls.blockedView.hidden = true;
   let r;
   try {
     r = await api("/api/me");

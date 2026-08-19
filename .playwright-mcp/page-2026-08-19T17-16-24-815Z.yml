@@ -1,0 +1,4 @@
+- main [ref=e3]:
+  - heading "Service indisponible" [level=1] [ref=e4]
+  - paragraph [ref=e5]: Le service sera bientôt de retour.
+  - button "Réessayer" [ref=e6] [cursor=pointer]
