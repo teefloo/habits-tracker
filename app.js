@@ -289,9 +289,15 @@ async function handleToggle(btn) {
   const date = btn.dataset.date;
   const done = btn.getAttribute("aria-pressed") === "true";
   btn.disabled = true;
+  btn.classList.add("is-pending");
+  btn.setAttribute("aria-busy", "true");
   const method = done ? "DELETE" : "PUT";
   const sent = await sendMutation(`/api/completions/${habitId}/${date}`, method);
-  if (!sent) btn.disabled = false;
+  if (!sent) {
+    btn.disabled = false;
+    btn.classList.remove("is-pending");
+    btn.removeAttribute("aria-busy");
+  }
 }
 
 function confirmDelete(habitId, habitName, nameCell) {
@@ -324,8 +330,12 @@ function confirmDelete(habitId, habitName, nameCell) {
 
   confirmBtn.addEventListener("click", async () => {
     confirmBtn.disabled = true;
+    confirmBtn.setAttribute("aria-busy", "true");
     const sent = await sendMutation(`/api/habits/${habitId}`, "DELETE");
-    if (!sent) revert();
+    if (!sent) {
+      confirmBtn.removeAttribute("aria-busy");
+      revert();
+    }
   });
   confirmBtn.addEventListener("keydown", (e) => {
     if (e.key === "Escape") revert();
@@ -345,12 +355,14 @@ async function addHabit(name) {
   if (!trimmed) return;
   const submitBtn = els.addForm.querySelector("button[type=submit]");
   submitBtn.disabled = true;
+  submitBtn.setAttribute("aria-busy", "true");
   const res = await apiCall("/api/habits", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name: trimmed.slice(0, 60) }),
   });
   submitBtn.disabled = false;
+  submitBtn.removeAttribute("aria-busy");
   if (!res) {
     showSyncError();
     return;

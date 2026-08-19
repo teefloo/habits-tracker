@@ -78,6 +78,7 @@ async function submitLogin(e) {
   e.preventDefault();
   clearError(authEls.loginError);
   authEls.loginSubmit.disabled = true;
+  authEls.loginSubmit.setAttribute("aria-busy", "true");
   try {
     const r = await api("/api/login", {
       method: "POST",
@@ -103,6 +104,7 @@ async function submitLogin(e) {
     showBlocked("Hors ligne", "Vérifiez votre connexion puis réessayez.");
   } finally {
     authEls.loginSubmit.disabled = false;
+    authEls.loginSubmit.removeAttribute("aria-busy");
   }
 }
 
@@ -110,6 +112,7 @@ async function submitRegister(e) {
   e.preventDefault();
   clearError(authEls.registerError);
   authEls.registerSubmit.disabled = true;
+  authEls.registerSubmit.setAttribute("aria-busy", "true");
   try {
     const r = await api("/api/register", {
       method: "POST",
@@ -135,6 +138,7 @@ async function submitRegister(e) {
     showBlocked("Hors ligne", "Vérifiez votre connexion puis réessayez.");
   } finally {
     authEls.registerSubmit.disabled = false;
+    authEls.registerSubmit.removeAttribute("aria-busy");
   }
 }
 
