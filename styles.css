@@ -117,6 +117,23 @@ body {
   .week-range {
     min-width: 0;
   }
+
+  .topbar-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .weeknav {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .week-range {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 .icon-btn {
@@ -200,6 +217,13 @@ body {
   transform: scale(0.97);
 }
 
+.primary-btn:disabled,
+.toggle:disabled,
+.delete-confirm:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
 /* ---------- Card / grid ---------- */
 
 .card {
@@ -219,7 +243,7 @@ body {
 .grid {
   display: grid;
   grid-template-columns: max(148px, 22vw, 148px) repeat(7, minmax(46px, 1fr));
-  min-width: 720px;
+  min-width: 470px;
 }
 
 .cell {
@@ -327,8 +351,8 @@ body {
 .delete {
   display: none;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   padding: 0;
   border: none;
   border-radius: 6px;
@@ -358,6 +382,12 @@ body {
 
 .delete:focus-visible {
   display: grid;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .delete {
+    display: grid;
+  }
 }
 
 .delete-confirm {

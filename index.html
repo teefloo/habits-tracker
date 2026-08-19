@@ -33,7 +33,7 @@
           <input id="login-password" name="password" type="password"
                  autocomplete="current-password" maxlength="200" required>
         </div>
-        <p class="auth-error" id="login-error" hidden></p>
+        <p class="auth-error" id="login-error" role="alert" hidden></p>
         <button type="submit" class="primary-btn auth-submit" id="login-submit">
           Se connecter
         </button>
@@ -54,7 +54,7 @@
                  autocomplete="new-password" minlength="8" maxlength="200" required>
           <p class="field-hint">8 caractères minimum</p>
         </div>
-        <p class="auth-error" id="register-error" hidden></p>
+        <p class="auth-error" id="register-error" role="alert" hidden></p>
         <button type="submit" class="primary-btn auth-submit" id="register-submit">
           Créer le compte
         </button>
@@ -75,7 +75,7 @@
           <button type="button" id="prev-week" class="icon-btn" aria-label="Semaine précédente">
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5"/></svg>
           </button>
-          <time class="week-range" id="week-range">—</time>
+          <time class="week-range" id="week-range" aria-live="polite" aria-atomic="true">—</time>
           <button type="button" id="next-week" class="icon-btn" aria-label="Semaine suivante">
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg>
           </button>
@@ -87,7 +87,7 @@
 
     <main class="card" id="card">
       <p class="sync-error" id="sync-error" role="status" hidden>
-        <span>Connexion perdue, les changements ne sont pas enregistrés.</span>
+        <span id="sync-message">Connexion perdue, les changements ne sont pas enregistrés.</span>
         <button type="button" class="ghost-btn" id="sync-retry">Réessayer</button>
       </p>
 
@@ -107,7 +107,7 @@
       <form class="add-form" id="add-form" hidden>
         <label class="sr-only" for="new-habit">Nom de la nouvelle habitude</label>
         <input id="new-habit" type="text" maxlength="60" placeholder="Ex. Lire 20 minutes"
-               autocomplete="off" spellcheck="false">
+               autocomplete="off" spellcheck="false" required>
         <button type="submit" class="primary-btn">Ajouter</button>
       </form>
     </main>

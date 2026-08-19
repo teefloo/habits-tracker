@@ -1,0 +1,95 @@
+- generic [ref=e7]:
+  - banner [ref=e8]:
+    - heading "Habitudes" [level=1] [ref=e9]
+    - generic [ref=e10]:
+      - navigation "Navigation par semaine" [ref=e11]:
+        - button "Semaine précédente" [ref=e12] [cursor=pointer]
+        - time [ref=e15]: 17 – 23 août 2026
+        - button "Semaine suivante" [ref=e16] [cursor=pointer]
+        - button "Aujourd'hui" [disabled] [ref=e19]
+      - button "Déconnexion" [ref=e20] [cursor=pointer]
+  - main [ref=e21]:
+    - grid "Suivi hebdomadaire des habitudes" [ref=e23]:
+      - generic [ref=e24]: Habitude
+      - generic [ref=e25]:
+        - columnheader "lun 17" [ref=e148]:
+          - generic [ref=e149]: lun
+          - generic [ref=e150]: "17"
+        - columnheader "mar 18" [ref=e151]:
+          - generic [ref=e152]: mar
+          - generic [ref=e153]: "18"
+        - columnheader "mer 19" [ref=e154]:
+          - generic [ref=e155]: mer
+          - generic [ref=e156]: "19"
+        - columnheader "jeu 20" [ref=e157]:
+          - generic [ref=e158]: jeu
+          - generic [ref=e159]: "20"
+        - columnheader "ven 21" [ref=e160]:
+          - generic [ref=e161]: ven
+          - generic [ref=e162]: "21"
+        - columnheader "sam 22" [ref=e163]:
+          - generic [ref=e164]: sam
+          - generic [ref=e165]: "22"
+        - columnheader "dim 23" [ref=e166]:
+          - generic [ref=e167]: dim
+          - generic [ref=e168]: "23"
+      - generic [ref=e47]:
+        - row [ref=e169]:
+          - rowheader "Lire 20 minutes 2 jours réalisés sur 7 cette semaine" [ref=e170]:
+            - generic [ref=e171]: Lire 20 minutes
+            - generic "2 jours réalisés sur 7 cette semaine" [ref=e172]: 2/7
+          - gridcell [ref=e173]:
+            - button "Lire 20 minutes, lundi 17 août 2026 — réalisée" [pressed] [ref=e174] [cursor=pointer]
+          - gridcell [ref=e177]:
+            - button "Lire 20 minutes, mardi 18 août 2026 — non réalisée" [ref=e178] [cursor=pointer]
+          - gridcell [ref=e181]:
+            - button "Lire 20 minutes, mercredi 19 août 2026 — réalisée" [pressed] [ref=e182] [cursor=pointer]
+          - gridcell [ref=e185]:
+            - button "Lire 20 minutes, jeudi 20 août 2026 — non réalisée" [ref=e186] [cursor=pointer]
+          - gridcell [ref=e189]:
+            - button "Lire 20 minutes, vendredi 21 août 2026 — non réalisée" [ref=e190] [cursor=pointer]
+          - gridcell [ref=e193]:
+            - button "Lire 20 minutes, samedi 22 août 2026 — non réalisée" [ref=e194] [cursor=pointer]
+          - gridcell [ref=e197]:
+            - button "Lire 20 minutes, dimanche 23 août 2026 — non réalisée" [ref=e198] [cursor=pointer]
+        - row [ref=e201]:
+          - rowheader "Méditer 1 jour réalisé sur 7 cette semaine" [ref=e202]:
+            - generic [ref=e203]: Méditer
+            - generic "1 jour réalisé sur 7 cette semaine" [ref=e204]: 1/7
+          - gridcell [ref=e205]:
+            - button "Méditer, lundi 17 août 2026 — non réalisée" [ref=e206] [cursor=pointer]
+          - gridcell [ref=e209]:
+            - button "Méditer, mardi 18 août 2026 — non réalisée" [ref=e210] [cursor=pointer]
+          - gridcell [ref=e213]:
+            - button "Méditer, mercredi 19 août 2026 — réalisée" [pressed] [ref=e214] [cursor=pointer]
+          - gridcell [ref=e217]:
+            - button "Méditer, jeudi 20 août 2026 — non réalisée" [ref=e218] [cursor=pointer]
+          - gridcell [ref=e221]:
+            - button "Méditer, vendredi 21 août 2026 — non réalisée" [ref=e222] [cursor=pointer]
+          - gridcell [ref=e225]:
+            - button "Méditer, samedi 22 août 2026 — non réalisée" [ref=e226] [cursor=pointer]
+          - gridcell [ref=e229]:
+            - button "Méditer, dimanche 23 août 2026 — non réalisée" [ref=e230] [cursor=pointer]
+        - row [ref=e233]:
+          - rowheader "Marcher 0 jour réalisé sur 7 cette semaine" [ref=e234]:
+            - generic [ref=e235]: Marcher
+            - generic "0 jour réalisé sur 7 cette semaine" [ref=e236]: 0/7
+          - gridcell [ref=e237]:
+            - button "Marcher, lundi 17 août 2026 — non réalisée" [ref=e238] [cursor=pointer]
+          - gridcell [ref=e241]:
+            - button "Marcher, mardi 18 août 2026 — non réalisée" [ref=e242] [cursor=pointer]
+          - gridcell [ref=e245]:
+            - button "Marcher, mercredi 19 août 2026 — non réalisée" [ref=e246] [cursor=pointer]
+          - gridcell [ref=e249]:
+            - button "Marcher, jeudi 20 août 2026 — non réalisée" [ref=e250] [cursor=pointer]
+          - gridcell [ref=e253]:
+            - button "Marcher, vendredi 21 août 2026 — non réalisée" [ref=e254] [cursor=pointer]
+          - gridcell [ref=e257]:
+            - button "Marcher, samedi 22 août 2026 — non réalisée" [ref=e258] [cursor=pointer]
+          - gridcell [ref=e261]:
+            - button "Marcher, dimanche 23 août 2026 — non réalisée" [ref=e262] [cursor=pointer]
+    - generic [ref=e144]:
+      - generic [ref=e145]: Nom de la nouvelle habitude
+      - textbox "Nom de la nouvelle habitude" [ref=e146]:
+        - /placeholder: Ex. Lire 20 minutes
+      - button "Ajouter" [ref=e147] [cursor=pointer]

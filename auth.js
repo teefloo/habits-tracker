@@ -167,12 +167,14 @@ authEls.loginForm.addEventListener("submit", submitLogin);
 authEls.registerForm.addEventListener("submit", submitRegister);
 
 authEls.showRegister.addEventListener("click", () => {
+  clearError(authEls.loginError);
   authEls.loginForm.hidden = true;
   authEls.registerForm.hidden = false;
   authEls.registerForm.email.focus();
 });
 
 authEls.showLogin.addEventListener("click", () => {
+  clearError(authEls.registerError);
   authEls.registerForm.hidden = true;
   authEls.loginForm.hidden = false;
   authEls.loginForm.email.focus();

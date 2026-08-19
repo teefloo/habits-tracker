@@ -11,6 +11,7 @@ const els = {
   addForm: document.getElementById("add-form"),
   newHabit: document.getElementById("new-habit"),
   syncError: document.getElementById("sync-error"),
+  syncMessage: document.getElementById("sync-message"),
   syncRetry: document.getElementById("sync-retry"),
 };
 
@@ -183,8 +184,13 @@ function renderRows() {
 
     const count = document.createElement("span");
     count.className = "row-count";
-    count.textContent = `${countDone(habit.id)}/7`;
-    count.title = "Habitudes réalisées cette semaine";
+    const done = countDone(habit.id);
+    count.textContent = `${done}/7`;
+    count.setAttribute(
+      "aria-label",
+      `${done} jour${done > 1 ? "s" : ""} réalisé${done > 1 ? "s" : ""} sur 7 cette semaine`
+    );
+    count.title = "Jours réalisés cette semaine";
 
     const del = makeDeleteBtn(habit);
     nameCell.append(label, count, del);
@@ -212,7 +218,8 @@ function render() {
   els.addForm.hidden = !hasHabits;
 }
 
-function showSyncError() {
+function showSyncError(message = "Connexion perdue, les changements ne sont pas enregistrés.") {
+  els.syncMessage.textContent = message;
   els.syncError.hidden = false;
 }
 
@@ -240,7 +247,13 @@ async function apiCall(path, opts) {
 async function fetchState() {
   const res = await apiCall("/api/state");
   if (!res || !res.ok) {
-    showSyncError();
+    showSyncError(
+      !res
+        ? "Connexion perdue, les changements ne sont pas enregistrés."
+        : res.status === 503
+          ? "Service indisponible pour le moment. Réessayez."
+          : "Impossible de charger vos habitudes. Réessayez."
+    );
     return false;
   }
   const data = await res.json();
@@ -260,8 +273,15 @@ async function sendMutation(path, method) {
     showSyncError();
     return false;
   }
-  await fetchState();
-  return true;
+  if (!res.ok) {
+    showSyncError(
+      res.status === 503
+        ? "Service indisponible pour le moment. Réessayez."
+        : "Impossible d'enregistrer ce changement. Réessayez."
+    );
+    return false;
+  }
+  return fetchState();
 }
 
 async function handleToggle(btn) {
@@ -335,6 +355,14 @@ async function addHabit(name) {
     showSyncError();
     return;
   }
+  if (!res.ok) {
+    showSyncError(
+      res.status === 503
+        ? "Service indisponible pour le moment. Réessayez."
+        : "Impossible d'ajouter l'habitude. Réessayez."
+    );
+    return;
+  }
   await fetchState();
   els.newHabit.value = "";
   els.newHabit.focus();
@@ -371,6 +399,7 @@ els.addForm.addEventListener("submit", (e) => {
 });
 
 els.emptyAdd.addEventListener("click", () => {
+  els.empty.hidden = true;
   els.addForm.hidden = false;
   els.newHabit.focus();
 });
