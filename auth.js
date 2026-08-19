@@ -1,4 +1,5 @@
 const authEls = {
+  skipLink: document.querySelector(".skip-link"),
   bootView: document.getElementById("boot-view"),
   authView: document.getElementById("auth-view"),
   appView: document.getElementById("app-view"),
@@ -15,7 +16,12 @@ const authEls = {
   blockedTitle: document.getElementById("blocked-title"),
   blockedText: document.getElementById("blocked-text"),
   blockedRetry: document.getElementById("blocked-retry"),
+  passwordToggles: document.querySelectorAll(".password-toggle"),
 };
+
+function setSkipTarget(id) {
+  authEls.skipLink.href = `#${id}`;
+}
 
 async function api(path, opts = {}) {
   const res = await fetch(path, {
@@ -34,35 +40,87 @@ async function api(path, opts = {}) {
 }
 
 function showAuth() {
+  setSkipTarget("auth-content");
   authEls.bootView.hidden = true;
   authEls.authView.hidden = false;
   authEls.appView.hidden = true;
   authEls.blockedView.hidden = true;
+  window.requestAnimationFrame(() => authEls.loginForm.email.focus());
 }
 
 function showApp() {
+  setSkipTarget("main-content");
   authEls.bootView.hidden = true;
   authEls.authView.hidden = true;
   authEls.appView.hidden = false;
   authEls.blockedView.hidden = true;
+  window.requestAnimationFrame(() => document.getElementById("main-content").focus());
 }
 
 function showBlocked(title, text) {
+  setSkipTarget("blocked-content");
   authEls.bootView.hidden = true;
   authEls.authView.hidden = true;
   authEls.appView.hidden = true;
   authEls.blockedView.hidden = false;
   authEls.blockedTitle.textContent = title;
   authEls.blockedText.textContent = text;
+  window.requestAnimationFrame(() => authEls.blockedTitle.focus());
 }
 
 function setError(el, message) {
   el.textContent = message;
   el.hidden = false;
+  el.focus();
 }
 
 function clearError(el) {
   el.hidden = true;
+}
+
+function resetPasswordToggles() {
+  authEls.passwordToggles.forEach((button) => {
+    const input = document.getElementById(button.dataset.target);
+    input.type = "password";
+    button.textContent = "Afficher";
+    button.setAttribute("aria-label", "Afficher le mot de passe");
+    button.setAttribute("aria-pressed", "false");
+  });
+}
+
+function togglePassword(button) {
+  const input = document.getElementById(button.dataset.target);
+  const visible = input.type === "password";
+  input.type = visible ? "text" : "password";
+  button.textContent = visible ? "Masquer" : "Afficher";
+  button.setAttribute(
+    "aria-label",
+    `${visible ? "Masquer" : "Afficher"} le mot de passe`
+  );
+  button.setAttribute("aria-pressed", String(visible));
+  input.focus({ preventScroll: true });
+}
+
+function validateCredentials(form, errorEl, isRegister) {
+  const email = form.email.value.trim();
+  const password = form.password.value;
+  if (!email) {
+    setError(errorEl, "Saisissez votre adresse email.");
+    return false;
+  }
+  if (!form.email.checkValidity()) {
+    setError(errorEl, "Saisissez une adresse email valide.");
+    return false;
+  }
+  if (!password) {
+    setError(errorEl, "Saisissez votre mot de passe.");
+    return false;
+  }
+  if (isRegister && password.length < 8) {
+    setError(errorEl, "Le mot de passe doit contenir au moins 8 caractères.");
+    return false;
+  }
+  return true;
 }
 
 async function enterApp() {
@@ -77,6 +135,7 @@ async function enterApp() {
 async function submitLogin(e) {
   e.preventDefault();
   clearError(authEls.loginError);
+  if (!validateCredentials(authEls.loginForm, authEls.loginError, false)) return;
   authEls.loginSubmit.disabled = true;
   authEls.loginSubmit.setAttribute("aria-busy", "true");
   try {
@@ -111,6 +170,7 @@ async function submitLogin(e) {
 async function submitRegister(e) {
   e.preventDefault();
   clearError(authEls.registerError);
+  if (!validateCredentials(authEls.registerForm, authEls.registerError, true)) return;
   authEls.registerSubmit.disabled = true;
   authEls.registerSubmit.setAttribute("aria-busy", "true");
   try {
@@ -150,9 +210,11 @@ async function logout() {
   }
   showAuth();
   authEls.loginForm.password.value = "";
+  resetPasswordToggles();
 }
 
 async function init() {
+  setSkipTarget("boot-content");
   authEls.bootView.hidden = false;
   authEls.authView.hidden = true;
   authEls.appView.hidden = true;
@@ -181,6 +243,9 @@ async function init() {
 
 authEls.loginForm.addEventListener("submit", submitLogin);
 authEls.registerForm.addEventListener("submit", submitRegister);
+authEls.passwordToggles.forEach((button) => {
+  button.addEventListener("click", () => togglePassword(button));
+});
 
 authEls.showRegister.addEventListener("click", () => {
   clearError(authEls.loginError);

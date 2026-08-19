@@ -6,8 +6,8 @@
   <title>Habitudes</title>
   <meta name="description" content="Suivi quotidien de vos habitudes.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f2f2f7">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111113">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f6f1">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111612">
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,54 +19,88 @@
 </head>
 <body>
 
-  <div class="shell" id="boot-view">
-    <main class="card boot-card" role="status" aria-live="polite">
-      <h1 class="title boot-title">Habitudes</h1>
-      <p class="boot-text">Chargement…</p>
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+
+  <div class="shell state-shell" id="boot-view">
+    <main class="card state-card boot-card" id="boot-content" tabindex="-1" role="status" aria-live="polite">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="m5.5 12.5 4.2 4.2 8.8-9.2" />
+        </svg>
+      </span>
+      <p class="eyebrow">Suivi hebdomadaire</p>
+      <h1 class="state-title">Habitudes</h1>
+      <p class="state-text">Préparation de votre semaine…</p>
     </main>
   </div>
 
-  <div class="shell" id="auth-view" hidden>
-    <main class="card auth-card">
-      <h1 class="title auth-title">Habitudes</h1>
+  <div class="shell state-shell" id="auth-view" hidden>
+    <main class="card auth-card" id="auth-content" tabindex="-1" aria-labelledby="auth-title">
+      <div class="auth-heading">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m5.5 12.5 4.2 4.2 8.8-9.2" />
+          </svg>
+        </span>
+        <div>
+          <p class="eyebrow">Suivi hebdomadaire</p>
+          <h1 class="auth-title" id="auth-title">Habitudes</h1>
+          <p class="auth-description">Une semaine à la fois, avec simplicité.</p>
+        </div>
+      </div>
 
       <form id="login-form" class="auth-form" novalidate>
         <div class="field">
-          <label for="login-email">Email</label>
-          <input id="login-email" name="email" type="email" autocomplete="email"
-                 maxlength="254" required>
+          <label for="login-email">Adresse email</label>
+          <input id="login-email" name="email" type="email" inputmode="email" autocomplete="email"
+                 maxlength="254" aria-describedby="login-error" spellcheck="false" required>
         </div>
         <div class="field">
           <label for="login-password">Mot de passe</label>
-          <input id="login-password" name="password" type="password"
-                 autocomplete="current-password" maxlength="200" required>
+          <div class="input-action">
+            <input id="login-password" name="password" type="password"
+                   autocomplete="current-password" maxlength="200"
+                   aria-describedby="login-error" required>
+            <button type="button" class="password-toggle" data-target="login-password"
+                    aria-label="Afficher le mot de passe" aria-pressed="false">
+              Afficher
+            </button>
+          </div>
         </div>
-        <p class="auth-error" id="login-error" role="alert" hidden></p>
+        <p class="auth-error" id="login-error" role="alert" tabindex="-1" hidden></p>
         <button type="submit" class="primary-btn auth-submit" id="login-submit">
           Se connecter
         </button>
-        <button type="button" class="ghost-btn auth-switch" id="show-register">
+        <button type="button" class="link-btn auth-switch" id="show-register">
           Créer un compte
         </button>
       </form>
 
       <form id="register-form" class="auth-form" novalidate hidden>
         <div class="field">
-          <label for="register-email">Email</label>
-          <input id="register-email" name="email" type="email" autocomplete="email"
-                 maxlength="254" required>
+          <label for="register-email">Adresse email</label>
+          <input id="register-email" name="email" type="email" inputmode="email" autocomplete="email"
+                 maxlength="254" aria-describedby="register-error" spellcheck="false" required>
         </div>
         <div class="field">
           <label for="register-password">Mot de passe</label>
-          <input id="register-password" name="password" type="password"
-                 autocomplete="new-password" minlength="8" maxlength="200" required>
-          <p class="field-hint">8 caractères minimum</p>
+          <div class="input-action">
+            <input id="register-password" name="password" type="password"
+                   autocomplete="new-password" minlength="8" maxlength="200"
+                   aria-describedby="register-error register-password-hint" required>
+            <button type="button" class="password-toggle"
+                    data-target="register-password" aria-label="Afficher le mot de passe"
+                    aria-pressed="false">
+              Afficher
+            </button>
+          </div>
+          <p class="field-hint" id="register-password-hint">8 caractères minimum</p>
         </div>
-        <p class="auth-error" id="register-error" role="alert" hidden></p>
+        <p class="auth-error" id="register-error" role="alert" tabindex="-1" hidden></p>
         <button type="submit" class="primary-btn auth-submit" id="register-submit">
           Créer le compte
         </button>
-        <button type="button" class="ghost-btn auth-switch" id="show-login">
+        <button type="button" class="link-btn auth-switch" id="show-login">
           Se connecter
         </button>
       </form>
@@ -76,16 +110,34 @@
   <div class="shell" id="app-view" hidden>
 
     <header class="topbar">
-      <h1 class="title">Habitudes</h1>
+      <div class="brand">
+        <span class="brand-mark brand-mark-small" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m5.5 12.5 4.2 4.2 8.8-9.2" />
+          </svg>
+        </span>
+        <div>
+          <p class="eyebrow">Suivi hebdomadaire</p>
+          <h1 class="title">Habitudes</h1>
+        </div>
+      </div>
 
       <div class="topbar-actions">
         <nav class="weeknav" aria-label="Navigation par semaine">
-          <button type="button" id="prev-week" class="icon-btn" aria-label="Semaine précédente">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5"/></svg>
+          <span class="week-label">Semaine</span>
+          <button type="button" id="prev-week" class="icon-btn"
+                  aria-label="Semaine précédente">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M10 3.5 5.5 8 10 12.5" />
+            </svg>
           </button>
-          <time class="week-range" id="week-range" aria-live="polite" aria-atomic="true">—</time>
-          <button type="button" id="next-week" class="icon-btn" aria-label="Semaine suivante">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"/></svg>
+          <time class="week-range" id="week-range" aria-live="polite"
+                aria-atomic="true">—</time>
+          <button type="button" id="next-week" class="icon-btn"
+                  aria-label="Semaine suivante">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M6 3.5 10.5 8 6 12.5" />
+            </svg>
           </button>
           <button type="button" id="today-btn" class="ghost-btn">Aujourd'hui</button>
         </nav>
@@ -93,8 +145,16 @@
       </div>
     </header>
 
-    <main class="card" id="card">
-      <p class="sync-error" id="sync-error" role="status" hidden>
+    <main class="card app-card" id="main-content" tabindex="-1" aria-labelledby="grid-title">
+      <div class="card-heading">
+        <div>
+          <p class="eyebrow">Votre rythme</p>
+          <h2 class="card-title" id="grid-title">Cette semaine</h2>
+        </div>
+        <p class="card-description">Une case par jour et par habitude.</p>
+      </div>
+
+      <p class="sync-error" id="sync-error" role="status" aria-live="polite" hidden>
         <span id="sync-message">Connexion perdue, les changements ne sont pas enregistrés.</span>
         <button type="button" class="ghost-btn" id="sync-retry">Réessayer</button>
       </p>
@@ -106,26 +166,52 @@
           <div id="rows"></div>
         </div>
       </div>
+      <p class="grid-hint" id="grid-hint" hidden>Faites glisser pour voir les autres jours</p>
 
       <div class="empty" id="empty" hidden>
-        <p class="empty-text">Aucune habitude pour l'instant.</p>
-        <button type="button" class="ghost-btn" id="empty-add">Ajouter une première habitude</button>
+        <span class="empty-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m5.5 12.5 4.2 4.2 8.8-9.2" />
+          </svg>
+        </span>
+        <div class="empty-copy">
+          <h2 class="empty-title">Commencez par une habitude</h2>
+          <p class="empty-text">Ajoutez une habitude pour commencer votre première semaine.</p>
+        </div>
+        <button type="button" class="ghost-btn" id="empty-add">
+          Ajouter une première habitude
+        </button>
       </div>
 
       <form class="add-form" id="add-form" hidden>
-        <label class="sr-only" for="new-habit">Nom de la nouvelle habitude</label>
-        <input id="new-habit" type="text" maxlength="60" placeholder="Ex. Lire 20 minutes"
-               autocomplete="off" spellcheck="false" required>
-        <button type="submit" class="primary-btn">Ajouter</button>
+        <div class="add-form-copy">
+          <label for="new-habit">Ajouter une habitude</label>
+          <p>60 caractères maximum</p>
+        </div>
+        <div class="add-form-controls">
+          <input id="new-habit" name="habit" type="text" maxlength="60"
+                 placeholder="Ex. Lire 20 minutes…"
+                 autocomplete="off" spellcheck="false" required>
+          <button type="submit" class="primary-btn">Ajouter</button>
+        </div>
       </form>
+
+      <p class="sr-only" id="app-status" role="status" aria-live="polite"
+         aria-atomic="true"></p>
     </main>
 
   </div>
 
-  <div class="shell" id="blocked-view" hidden>
-    <main class="card blocked-card">
-      <h1 class="blocked-title" id="blocked-title">Service indisponible</h1>
-      <p class="blocked-text" id="blocked-text"></p>
+  <div class="shell state-shell" id="blocked-view" hidden>
+    <main class="card state-card blocked-card" id="blocked-content" tabindex="-1" aria-labelledby="blocked-title">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" focusable="false">
+          <path d="m5.5 12.5 4.2 4.2 8.8-9.2" />
+        </svg>
+      </span>
+      <p class="eyebrow">Habitudes</p>
+      <h1 class="state-title" id="blocked-title" tabindex="-1">Service indisponible</h1>
+      <p class="state-text" id="blocked-text"></p>
       <button type="button" class="primary-btn" id="blocked-retry">Réessayer</button>
     </main>
   </div>

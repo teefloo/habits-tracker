@@ -1,5 +1,6 @@
 const els = {
   gridScroll: document.getElementById("grid-scroll"),
+  gridHint: document.getElementById("grid-hint"),
   dayHeaders: document.getElementById("day-headers"),
   rows: document.getElementById("rows"),
   weekRange: document.getElementById("week-range"),
@@ -13,6 +14,7 @@ const els = {
   syncError: document.getElementById("sync-error"),
   syncMessage: document.getElementById("sync-message"),
   syncRetry: document.getElementById("sync-retry"),
+  appStatus: document.getElementById("app-status"),
 };
 
 const state = {
@@ -97,12 +99,18 @@ function renderRange() {
 
 function renderDayHeaders() {
   els.dayHeaders.innerHTML = "";
+  const today = new Date();
   for (let i = 0; i < 7; i++) {
     const date = addDays(state.weekStart, i);
+    const isToday = isSameDay(date, today);
     const div = document.createElement("div");
-    div.className = "day" + (isSameDay(date, new Date()) ? " is-today" : "");
+    div.className = "day" + (isToday ? " is-today" : "");
     div.setAttribute("role", "columnheader");
-    if (isSameDay(date, new Date())) div.setAttribute("aria-current", "date");
+    div.setAttribute(
+      "aria-label",
+      `${fmtFull.format(date)}${isToday ? ", aujourd'hui" : ""}`
+    );
+    if (isToday) div.setAttribute("aria-current", "date");
 
     const dow = document.createElement("span");
     dow.className = "dow";
@@ -168,6 +176,7 @@ function makeDeleteBtn(habit) {
 
 function renderRows() {
   els.rows.innerHTML = "";
+  const today = new Date();
   state.habits.forEach((habit) => {
     const row = document.createElement("div");
     row.className = "row";
@@ -197,10 +206,12 @@ function renderRows() {
     row.appendChild(nameCell);
 
     for (let i = 0; i < 7; i++) {
+      const date = addDays(state.weekStart, i);
       const cell = document.createElement("div");
-      cell.className = "toggle-cell";
+      cell.className = "toggle-cell" +
+        (isSameDay(date, today) ? " is-today" : "");
       cell.setAttribute("role", "gridcell");
-      cell.appendChild(makeToggle(habit, addDays(state.weekStart, i)));
+      cell.appendChild(makeToggle(habit, date));
       row.appendChild(cell);
     }
 
@@ -214,6 +225,7 @@ function render() {
   renderRows();
   const hasHabits = state.habits.length > 0;
   els.gridScroll.hidden = !hasHabits;
+  els.gridHint.hidden = !hasHabits;
   els.empty.hidden = hasHabits;
   els.addForm.hidden = !hasHabits;
 }
@@ -225,6 +237,13 @@ function showSyncError(message = "Connexion perdue, les changements ne sont pas 
 
 function hideSyncError() {
   els.syncError.hidden = true;
+}
+
+function announce(message) {
+  els.appStatus.textContent = "";
+  window.setTimeout(() => {
+    els.appStatus.textContent = message;
+  }, 20);
 }
 
 async function apiCall(path, opts) {
@@ -287,12 +306,17 @@ async function sendMutation(path, method) {
 async function handleToggle(btn) {
   const habitId = btn.dataset.habit;
   const date = btn.dataset.date;
+  const habit = state.habits.find((item) => item.id === habitId);
   const done = btn.getAttribute("aria-pressed") === "true";
   btn.disabled = true;
   btn.classList.add("is-pending");
   btn.setAttribute("aria-busy", "true");
   const method = done ? "DELETE" : "PUT";
   const sent = await sendMutation(`/api/completions/${habitId}/${date}`, method);
+  if (sent && habit) {
+    const dateLabel = fmtFull.format(new Date(`${date}T00:00:00`));
+    announce(`${habit.name}, ${dateLabel} ${done ? "décochée" : "cochée"}.`);
+  }
   if (!sent) {
     btn.disabled = false;
     btn.classList.remove("is-pending");
@@ -311,7 +335,12 @@ function confirmDelete(habitId, habitName, nameCell) {
   const confirmBtn = document.createElement("button");
   confirmBtn.type = "button";
   confirmBtn.className = "delete-confirm";
-  confirmBtn.textContent = `Supprimer « ${habitName} » ?`;
+  confirmBtn.textContent = "Supprimer ?";
+  confirmBtn.setAttribute(
+    "aria-label",
+    `Confirmer la suppression de l'habitude « ${habitName} »`
+  );
+  confirmBtn.title = habitName;
   confirmBtn.dataset.habit = habitId;
   nameCell.appendChild(confirmBtn);
 
@@ -332,6 +361,7 @@ function confirmDelete(habitId, habitName, nameCell) {
     confirmBtn.disabled = true;
     confirmBtn.setAttribute("aria-busy", "true");
     const sent = await sendMutation(`/api/habits/${habitId}`, "DELETE");
+    if (sent) announce(`Habitude « ${habitName} » supprimée.`);
     if (!sent) {
       confirmBtn.removeAttribute("aria-busy");
       revert();
@@ -375,9 +405,10 @@ async function addHabit(name) {
     );
     return;
   }
-  await fetchState();
+  const loaded = await fetchState();
   els.newHabit.value = "";
   els.newHabit.focus();
+  if (loaded) announce(`Habitude « ${trimmed} » ajoutée.`);
 }
 
 els.rows.addEventListener("click", (e) => {
