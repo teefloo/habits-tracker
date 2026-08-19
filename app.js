@@ -18,7 +18,7 @@ const els = {
 };
 
 const state = {
-  weekStart: startOfWeek(new Date()),
+  rangeStart: startOfRange(new Date()),
   habits: [],
   completions: {},
 };
@@ -35,10 +35,9 @@ const fmtFull = new Intl.DateTimeFormat("fr-FR", {
   year: "numeric",
 });
 
-function startOfWeek(date) {
+function startOfRange(date) {
   const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const dow = (d.getDay() + 6) % 7;
-  d.setDate(d.getDate() - dow);
+  d.setDate(d.getDate() - 6);
   return d;
 }
 
@@ -92,16 +91,16 @@ function formatRange(start) {
 }
 
 function renderRange() {
-  els.weekRange.textContent = formatRange(state.weekStart);
-  const today = startOfWeek(new Date());
-  els.todayBtn.disabled = isSameDay(state.weekStart, today);
+  els.weekRange.textContent = formatRange(state.rangeStart);
+  const today = startOfRange(new Date());
+  els.todayBtn.disabled = isSameDay(state.rangeStart, today);
 }
 
 function renderDayHeaders() {
   els.dayHeaders.innerHTML = "";
   const today = new Date();
   for (let i = 0; i < 7; i++) {
-    const date = addDays(state.weekStart, i);
+    const date = addDays(state.rangeStart, i);
     const isToday = isSameDay(date, today);
     const div = document.createElement("div");
     div.className = "day" + (isToday ? " is-today" : "");
@@ -128,7 +127,7 @@ function renderDayHeaders() {
 function countDone(habitId) {
   let n = 0;
   for (let i = 0; i < 7; i++) {
-    if (state.completions[keyFor(habitId, addDays(state.weekStart, i))]) n++;
+    if (state.completions[keyFor(habitId, addDays(state.rangeStart, i))]) n++;
   }
   return n;
 }
@@ -197,16 +196,16 @@ function renderRows() {
     count.textContent = `${done}/7`;
     count.setAttribute(
       "aria-label",
-      `${done} jour${done > 1 ? "s" : ""} réalisé${done > 1 ? "s" : ""} sur 7 cette semaine`
+      `${done} jour${done > 1 ? "s" : ""} réalisé${done > 1 ? "s" : ""} sur les 7 derniers jours`
     );
-    count.title = "Jours réalisés cette semaine";
+    count.title = "Jours réalisés sur les 7 derniers jours";
 
     const del = makeDeleteBtn(habit);
     nameCell.append(label, count, del);
     row.appendChild(nameCell);
 
     for (let i = 0; i < 7; i++) {
-      const date = addDays(state.weekStart, i);
+      const date = addDays(state.rangeStart, i);
       const cell = document.createElement("div");
       cell.className = "toggle-cell" +
         (isSameDay(date, today) ? " is-today" : "");
@@ -422,17 +421,17 @@ els.rows.addEventListener("click", (e) => {
 });
 
 els.prevWeek.addEventListener("click", () => {
-  state.weekStart = addDays(state.weekStart, -7);
+  state.rangeStart = addDays(state.rangeStart, -1);
   render();
 });
 
 els.nextWeek.addEventListener("click", () => {
-  state.weekStart = addDays(state.weekStart, 7);
+  state.rangeStart = addDays(state.rangeStart, 1);
   render();
 });
 
 els.todayBtn.addEventListener("click", () => {
-  state.weekStart = startOfWeek(new Date());
+  state.rangeStart = startOfRange(new Date());
   render();
 });
 

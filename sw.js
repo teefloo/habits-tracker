@@ -1,4 +1,4 @@
-const CACHE_NAME = 'habits-tracker-v9';
+const CACHE_NAME = 'habits-tracker-v10';
 const SHELL = [
   '/',
   '/index.html',

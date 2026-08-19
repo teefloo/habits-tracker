@@ -6,8 +6,8 @@
   <title>Habitudes</title>
   <meta name="description" content="Suivi quotidien de vos habitudes.">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f6f1">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#111612">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f5">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0b0b">
   <link rel="manifest" href="manifest.json">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,9 +28,9 @@
           <path d="m5.5 12.5 4.2 4.2 8.8-9.2" />
         </svg>
       </span>
-      <p class="eyebrow">Suivi hebdomadaire</p>
+      <p class="eyebrow">Suivi des habitudes</p>
       <h1 class="state-title">Habitudes</h1>
-      <p class="state-text">Préparation de votre semaine…</p>
+      <p class="state-text">Préparation de votre suivi…</p>
     </main>
   </div>
 
@@ -43,9 +43,9 @@
           </svg>
         </span>
         <div>
-          <p class="eyebrow">Suivi hebdomadaire</p>
+          <p class="eyebrow">Suivi des habitudes</p>
           <h1 class="auth-title" id="auth-title">Habitudes</h1>
-          <p class="auth-description">Une semaine à la fois, avec simplicité.</p>
+          <p class="auth-description">Une habitude à la fois, avec simplicité.</p>
         </div>
       </div>
 
@@ -117,16 +117,16 @@
           </svg>
         </span>
         <div>
-          <p class="eyebrow">Suivi hebdomadaire</p>
+          <p class="eyebrow">Suivi des habitudes</p>
           <h1 class="title">Habitudes</h1>
         </div>
       </div>
 
       <div class="topbar-actions">
-        <nav class="weeknav" aria-label="Navigation par semaine">
-          <span class="week-label">Semaine</span>
+        <nav class="weeknav" aria-label="Navigation sur 7 jours">
+          <span class="week-label">Période</span>
           <button type="button" id="prev-week" class="icon-btn"
-                  aria-label="Semaine précédente">
+                  aria-label="Période précédente">
             <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path d="M10 3.5 5.5 8 10 12.5" />
             </svg>
@@ -134,7 +134,7 @@
           <time class="week-range" id="week-range" aria-live="polite"
                 aria-atomic="true">—</time>
           <button type="button" id="next-week" class="icon-btn"
-                  aria-label="Semaine suivante">
+                  aria-label="Période suivante">
             <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path d="M6 3.5 10.5 8 6 12.5" />
             </svg>
@@ -149,7 +149,7 @@
       <div class="card-heading">
         <div>
           <p class="eyebrow">Votre rythme</p>
-          <h2 class="card-title" id="grid-title">Cette semaine</h2>
+          <h2 class="card-title" id="grid-title">Les 7 derniers jours</h2>
         </div>
         <p class="card-description">Une case par jour et par habitude.</p>
       </div>
@@ -160,7 +160,7 @@
       </p>
 
       <div class="grid-scroll" id="grid-scroll" hidden>
-        <div class="grid" id="grid" role="grid" aria-label="Suivi hebdomadaire des habitudes">
+        <div class="grid" id="grid" role="grid" aria-label="Suivi des habitudes sur les 7 derniers jours">
           <div class="cell corner" id="corner">Habitude</div>
           <div id="day-headers"></div>
           <div id="rows"></div>
@@ -176,7 +176,7 @@
         </span>
         <div class="empty-copy">
           <h2 class="empty-title">Commencez par une habitude</h2>
-          <p class="empty-text">Ajoutez une habitude pour commencer votre première semaine.</p>
+          <p class="empty-text">Ajoutez une habitude pour commencer votre suivi.</p>
         </div>
         <button type="button" class="ghost-btn" id="empty-add">
           Ajouter une première habitude
