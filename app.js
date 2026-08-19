@@ -229,6 +229,18 @@ function render() {
   els.addForm.hidden = !hasHabits;
 }
 
+function pulseRowCount(habitId) {
+  const row = els.rows.querySelector(`.row[data-habit="${habitId}"]`);
+  const count = row && row.querySelector(".row-count");
+  if (!count) return;
+  count.classList.remove("is-bumped");
+  window.requestAnimationFrame(() => {
+    if (!count.isConnected) return;
+    count.classList.add("is-bumped");
+    window.setTimeout(() => count.classList.remove("is-bumped"), 420);
+  });
+}
+
 function showSyncError(message = "Connexion perdue, les changements ne sont pas enregistrés.") {
   els.syncMessage.textContent = message;
   els.syncError.hidden = false;
@@ -313,6 +325,7 @@ async function handleToggle(btn) {
   const method = done ? "DELETE" : "PUT";
   const sent = await sendMutation(`/api/completions/${habitId}/${date}`, method);
   if (sent && habit) {
+    pulseRowCount(habitId);
     const dateLabel = fmtFull.format(new Date(`${date}T00:00:00`));
     announce(`${habit.name}, ${dateLabel} ${done ? "décochée" : "cochée"}.`);
   }

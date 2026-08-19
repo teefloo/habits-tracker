@@ -26,6 +26,7 @@
   --radius-control: 12px;
   --radius-inner: 16px;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --duration-fast: 160ms;
   --duration: 220ms;
 }
@@ -633,6 +634,10 @@ button:disabled {
   white-space: nowrap;
 }
 
+.row-count.is-bumped {
+  animation: row-count-bump 360ms var(--ease-spring);
+}
+
 .delete {
   display: grid;
   flex: 0 0 auto;
@@ -693,6 +698,7 @@ button:disabled {
   font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
+  animation: delete-confirm-enter 220ms var(--ease-spring) both;
 }
 
 .delete-confirm:hover,
@@ -745,7 +751,7 @@ button:disabled {
   stroke-dasharray: 18;
   stroke-dashoffset: 18;
   transition: opacity var(--duration-fast) ease,
-    transform var(--duration) var(--ease-out),
+    transform var(--duration) var(--ease-spring),
     stroke-dashoffset var(--duration) var(--ease-out);
 }
 
@@ -1241,6 +1247,11 @@ button:disabled {
   .grid-scroll {
     scroll-behavior: auto;
   }
+
+  .row-count.is-bumped,
+  .delete-confirm {
+    animation: none;
+  }
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -1282,5 +1293,26 @@ button:disabled {
 @keyframes pending-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes row-count-bump {
+  0%,
+  100% {
+    transform: scale(1) translateY(0);
+  }
+  45% {
+    transform: scale(1.12) translateY(-2px);
+  }
+}
+
+@keyframes delete-confirm-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
