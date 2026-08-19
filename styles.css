@@ -115,6 +115,10 @@ input:focus-visible {
   outline-offset: 3px;
 }
 
+#main-content:focus {
+  outline: none;
+}
+
 button:disabled {
   cursor: wait;
 }
