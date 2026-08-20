@@ -107,6 +107,12 @@ input {
 
 button {
   touch-action: manipulation;
+  transition: border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out),
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 button:focus-visible,
@@ -252,11 +258,6 @@ button:disabled {
 .link-btn,
 .password-toggle {
   border-radius: var(--radius-control);
-  transition: border-color var(--duration-fast) ease,
-    background-color var(--duration-fast) ease,
-    color var(--duration-fast) ease,
-    box-shadow var(--duration-fast) ease,
-    transform var(--duration-fast) var(--ease-out);
 }
 
 .icon-btn,
@@ -305,6 +306,7 @@ button:disabled {
 .primary-btn:active,
 .link-btn:active,
 .password-toggle:active,
+.delete:active,
 .delete-confirm:active {
   transform: scale(0.97);
 }
@@ -656,11 +658,6 @@ button:disabled {
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
-  transition: border-color var(--duration-fast) ease,
-    background-color var(--duration-fast) ease,
-    color var(--duration-fast) ease,
-    opacity var(--duration-fast) ease,
-    transform var(--duration-fast) var(--ease-out);
 }
 
 .delete svg {
@@ -736,10 +733,6 @@ button:disabled {
   background: transparent;
   color: var(--bg);
   cursor: pointer;
-  transition: border-color var(--duration-fast) ease,
-    background-color var(--duration-fast) ease,
-    box-shadow var(--duration-fast) ease,
-    transform var(--duration-fast) var(--ease-out);
 }
 
 .toggle .check {
